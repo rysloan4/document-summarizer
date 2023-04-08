@@ -8,7 +8,6 @@ const handleFileUpload = (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const form = new IncomingForm();
-  form.uploadDir = 'uploads/';
 
   form.parse(req, (err, _fields, files) => {
     if (err) {
