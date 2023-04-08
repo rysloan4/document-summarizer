@@ -105,7 +105,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 function generatePrompt(text: String) {
-  return `Summarize this resume: ${text}`
+  return `Summarize this document: ${text}`
 }
 
 export default handler;
