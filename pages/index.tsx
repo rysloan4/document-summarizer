@@ -64,7 +64,7 @@ const Home: React.FC = () => {
         <div className="mt-4">
           {/* <h2 className="text-xl font-medium">Summary:</h2>
           <p className="mt-2">{extractedText}</p> */}
-          <h3 className="text-xl font-medium text-blue-800">Result</h3>
+          <h3 className="text-xl font-medium">Result</h3>
           <p className="mt-2">{queryResponse}</p>
         </div>
         </div>

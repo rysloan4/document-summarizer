@@ -23,7 +23,7 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({ onFileSubmit, children 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-x-4">
+    <form onSubmit={handleSubmit}>
       <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
         <span>Select File</span>
         <input
@@ -33,7 +33,9 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({ onFileSubmit, children 
         />
       </label>
       {selectedFile && (
-        <span className="text-sm text-gray-500">{selectedFile.name}</span>
+        <p>
+        <span className="text-sm text-gray-500">  {selectedFile.name}</span>
+        </p>
       )}
       {children}
       <button
