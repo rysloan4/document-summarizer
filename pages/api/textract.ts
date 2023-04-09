@@ -38,12 +38,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Use formidable to parse the request
   const form = new formidable.IncomingForm();
 
-  form.parse(req, async (err, _fields, files) => {
+  form.parse(req, async (err, fields, files) => {
     if (err) {
       res.status(500).json({ message: 'Error parsing the request' });
       return;
     }
-
+    const questionText = fields.questionText
     const file = files.file as File;
     // Upload the file to S3
     const s3UploadParams = {
@@ -64,7 +64,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
         FeatureTypes: ['TABLES', 'FORMS'],
       };
-      console.log('textracting')
       const textractResponse = await textract.analyzeDocument(textractParams).promise();
       let text = '';
       textractResponse.Blocks?.forEach((block) => {
@@ -75,13 +74,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       try {
-        const completion = await openai.createChatCompletion({
+        // const summary = await openai.createChatCompletion({
+        //   model: "gpt-3.5-turbo",
+        //   messages: [
+        //     {"role": "system", "content": "You are a helpful assistant who summarizes documents and provides insight."},
+        //     {role: 'user', content: `${generatePrompt(text)}`}
+        //   ],
+        //   temperature: 0.7,
+        //   max_tokens: 2000
+        // });
+        // const summaryResult = summary.data.choices[0].message?.content || '';
+        const query = await openai.createChatCompletion({
           model: "gpt-3.5-turbo",
-          messages: [{role: 'user', content: generatePrompt(text)}],
-          temperature: 0.7,
-          max_tokens: 2000
-        });
-        res.status(200).json({ result: completion.data.choices[0].message?.content});
+          messages: [
+            {"role": "system", "content": "You are a helpful assistant who summarizes documents and provides insight."},
+            {role: 'user', content: `${generatePrompt(text)}`},
+            {role: 'user', content: `${questionText}`}
+          ],
+        })
+        const queryResponse = query.data.choices[0].message?.content || '';
+        const result = { summary: '',  queryResponse}
+        res.status(200).json(result);
       } catch(error) {
         // Consider adjusting the error handling logic for your use case
         console.log('sending to open ai')
@@ -105,7 +118,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 function generatePrompt(text: String) {
-  return `Summarize this document: ${text}`
+  return `Here is a document: ${text}`
 }
 
 export default handler;

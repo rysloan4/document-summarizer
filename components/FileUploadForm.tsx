@@ -2,9 +2,10 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 
 interface FileUploadFormProps {
   onFileSubmit: (file: File) => void;
+  children?: React.ReactNode;
 }
 
-const FileUploadForm: React.FC<FileUploadFormProps> = ({ onFileSubmit }) => {
+const FileUploadForm: React.FC<FileUploadFormProps> = ({ onFileSubmit, children }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +35,7 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({ onFileSubmit }) => {
       {selectedFile && (
         <span className="text-sm text-gray-500">{selectedFile.name}</span>
       )}
+      {children}
       <button
         className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         type="submit"
